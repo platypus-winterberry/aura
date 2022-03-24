@@ -1,4 +1,4 @@
-# aura
+# aura 😇
 #### Tool to search and/or install AUR packages from the terminal
 
 
@@ -46,11 +46,12 @@ The aim is to keep aura as lightweight as possible therefore when it installs a 
 3. Run makepkg -si
 4. Remove the files from step 2 and 3 after the installation was finished
 
-## Roadmap
+## Contribute / Roadmap
 - [x] Search
 - [x] Install
 - [ ] Tests
 - [ ] Treat the error cases properly
 - [ ] Display a percentage instead of the long output
+- [ ] Add limit param to the search function
 
 #### NOTE: I've got a ' C# / JS background and  I am experimenting with rust as I want to fully transition to it in the future. Therefore, feel free to contribute even if you are a beginner, we can learn together.
