@@ -1,12 +1,12 @@
+use ansi_term::Colour;
+use clap::{ArgEnum, Parser, Subcommand};
 use regex::Regex;
 use reqwest;
 use serde::Deserializer;
 use serde::{Deserialize, Serialize};
-use tokio;
-use ansi_term::Colour;
-use std::process::Command;
 use std::fs;
-use clap::{Parser, ArgEnum, Subcommand};
+use std::process::Command;
+use tokio;
 
 #[derive(Deserialize)]
 struct Package {
@@ -30,20 +30,17 @@ struct Package {
     OutOfDate: i32,
 }
 
-
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 struct Cli {
     #[clap(subcommand)]
     command: SubCommands,
-
 }
-
 
 #[derive(Subcommand)]
 enum SubCommands {
     Install { name: String },
-    Search { name: String }
+    Search { name: String },
 }
 
 fn parse_null_integers<'de, D>(d: D) -> Result<i32, D::Error>
@@ -71,7 +68,10 @@ async fn query_aur(keyword: String) {
         + &keyword.to_string();
     println!("Fetching from: {}", url);
     let response: AurResponse = reqwest::get(url).await.unwrap().json().await.unwrap();
-    println!("Found {count} results", count=Colour::Green.paint(response.resultcount.to_string()));
+    println!(
+        "Found {count} results",
+        count = Colour::Green.paint(response.resultcount.to_string())
+    );
     for package in response.results {
         println!(
             "
@@ -82,25 +82,26 @@ async fn query_aur(keyword: String) {
             URL: {url}
             Download URL: https://aur.archlinux.org/{name}.git
             ",
-            name        = Colour::Red.paint(package.Name),
+            name = Colour::Red.paint(package.Name),
             description = package.Description,
-            maintainer  = package.Maintainer,
-            votes       = package.NumVotes,
-            url         = package.URL,
+            maintainer = package.Maintainer,
+            votes = package.NumVotes,
+            url = package.URL,
         );
     }
-
 }
 
 async fn install_package(package_name: String) {
-
     if cfg!(target_os = "windows") {
         panic!("Windows is not supported!");
     } else {
         let folder_name = format!("{name}", name = package_name);
         let mut git_process_child = Command::new("git")
             .arg("clone")
-            .arg(format!("https://aur.archlinux.org/{name}.git", name = package_name))
+            .arg(format!(
+                "https://aur.archlinux.org/{name}.git",
+                name = package_name
+            ))
             .spawn()
             .unwrap();
 
@@ -128,7 +129,6 @@ async fn install_package(package_name: String) {
         println!("{}", remove_tmp_result);
     };
 }
-
 
 #[tokio::main]
 async fn main() {
